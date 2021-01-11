@@ -1,0 +1,23 @@
+{
+  "name": "threejsplayground",
+  "version": "1.0.0",
+  "description": "This is where the trees grow",
+  "main": "app.js",
+  "dependencies": {
+    "three": "^0.124.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jordan141/threejsplayground.git"
+  },
+  "author": "Jordan Moss",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jordan141/threejsplayground/issues"
+  },
+  "homepage": "https://github.com/Jordan141/threejsplayground#readme"
+}
