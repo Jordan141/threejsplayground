@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="https://threejs.org/build/three.js"></script>
+        <script src='http://threejs.org/examples/js/controls/OrbitControls.js'></script>
+        <script src='http://threejs.org/examples/js/loaders/GLTFLoader.js'></script>
+        <script>
+            let scene, camera, renderer, controls, hemiLight, spotLight;
+
+            function init() {
+                scene = new THREE.Scene()
+                scene.background = new THREE.CubeTextureLoader()
+                .setPath('skybox/')
+                .load([
+                    'arid2_ft.jpg',
+                    'arid2_bk.jpg',
+                    'arid2_up.jpg',
+                    'arid2_dn.jpg',
+                    'arid2_rt.jpg',
+                    'arid2_lf.jpg'
+                ])
+
+                camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 5000)
+                camera.position.set(0, 25, 25)
+
+                hemiLight = new THREE.HemisphereLight(0xffeeb1, 0x080820, 4)
+                scene.add(hemiLight)
+
+                spotLight = new THREE.SpotLight(0xffa95c, 4);
+                spotLight.castShadow = true
+                spotLight.shadow.bias = -0.0001;
+                spotLight.shadow.mapSize.width = 1024*4
+                spotLight.shadow.mapSize.height = 1024*4
+                scene.add(spotLight)
+
+
+                renderer = new THREE.WebGLRenderer()
+                renderer.toneMapping = THREE.ReinhardToneMapping;
+                renderer.toneMappingExposure = 2.3;
+                renderer.shadowMap.enabled = true
+                renderer.setSize(window.innerWidth, window.innerHeight)
+
+                controls = new THREE.OrbitControls(camera, renderer.domElement)
+                controls.update()
+
+                document.body.appendChild(renderer.domElement)
+
+                new THREE.GLTFLoader().load('scene.gltf', result => {
+                    model = result.scene.children[0]
+                    model.traverse(n => {
+                        if(n.isMesh) {
+                            n.castShadow = true
+                            n.receiveShadow = true
+                            console.log(n.material.map)
+                            if(n.material.map) n.material.map.anisotropy = 16
+                        }
+                    })
+                    scene.add(model)
+                    animate()
+                })
+
+                animate()
+            }
+            function animate() {
+                renderer.render(scene, camera)
+                spotLight.position.set(
+                    camera.position.x + 10,
+                    camera.position.y + 10,
+                    camera.position.z + 10
+                )
+                requestAnimationFrame(animate)
+            }
+            init()
+        </script>
+    </body>
+</html>
